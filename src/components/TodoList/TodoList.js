@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import SingleTodo from '../SingleTodo/SingleTodo';
 
 const TodoList = () => {
+    const history = useHistory()
 
     const email = localStorage.getItem('email');
+    const [error, setError] = useState(false);
     const [todos, setTodos] = useState([]);
     const [inputTodo, setInputTodo] = useState({ email });
 
@@ -21,20 +24,24 @@ const TodoList = () => {
     }, [])
 
     const addTodo = (e) => {
-
-        // fetch('https://chatbot1870.herokuapp.com/insert', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(inputQA)
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         history.replace('/');
-        //         history.go(0);
-        //     });
-        // e.preventDefault();
+        fetch('http://localhost:5000/insert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(inputTodo)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data) {
+                    history.replace('/');
+                    history.go(0);
+                }
+                else {
+                    setError(true);
+                }
+            });
+        e.preventDefault();
     }
 
     const selectedTodos = todos.filter(todo => todo.email == email);
@@ -46,10 +53,16 @@ const TodoList = () => {
             {
                 selectedTodos.map((todo, index) => <SingleTodo key={todo._id} index={index} todo={todo} />)
             }
+            <h1 className="text-center mb-5">Create new Todo</h1>
             <form>
-                <input onBlur={handleBlur} name="taskName" type="text" className="form-control" placeholder="New Question" required /><br />
-                <input onBlur={handleBlur} name="taskDetails" type="text" className="form-control" placeholder="New Answer" required /><br />
-                <button className="btn btn-primary" onClick={addTodo}>Add Todo</button>
+                <input onBlur={handleBlur} name="taskName" type="text" className="form-control" placeholder="Task Name" required /><br />
+                <input onBlur={handleBlur} name="taskDetails" type="text" className="form-control" placeholder="Task Details" required /><br />
+
+                {error && <p className="text-danger text-center">Please fill up all fields</p>}
+
+                <div className="text-center">
+                    <button className="btn btn-primary mb-5" onClick={addTodo}>Add Todo</button>
+                </div>
             </form>
         </div>
     );
