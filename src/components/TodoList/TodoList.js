@@ -18,13 +18,13 @@ const TodoList = () => {
     }
 
     useEffect(() => {
-        fetch('http://localhost:5000/todos')
+        fetch('https://mern-todos18.herokuapp.com/todos')
             .then(res => res.json())
             .then(data => setTodos(data));
     }, [])
 
     const addTodo = (e) => {
-        fetch('http://localhost:5000/insert', {
+        fetch('https://mern-todos18.herokuapp.com/insert', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -44,11 +44,18 @@ const TodoList = () => {
         e.preventDefault();
     }
 
+    const logOut = () => {
+        localStorage.clear();
+    }
+
     const selectedTodos = todos.filter(todo => todo.email == email);
 
     return (
         <div className="container">
             <h1 className="text-center m-5">Your Gmail: {email}</h1>
+            <div className="text-center">
+                <button onClick={logOut} className="btn btn-primary">Logout</button>
+            </div>
             <h1 className="text-center m-5">Your Todos</h1>
             {
                 selectedTodos.map((todo, index) => <SingleTodo key={todo._id} index={index} todo={todo} />)
