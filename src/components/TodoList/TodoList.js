@@ -46,6 +46,8 @@ const TodoList = () => {
 
     const logOut = () => {
         localStorage.clear();
+        history.replace('/');
+        history.go(0);
     }
 
     const selectedTodos = todos.filter(todo => todo.email == email);
