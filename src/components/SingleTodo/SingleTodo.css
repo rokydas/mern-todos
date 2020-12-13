@@ -1,0 +1,9 @@
+.todo-box {
+    box-shadow: 5px 5px 20px lightgrey;
+    padding: 20px 30px;
+    border-radius: 15px;
+}
+
+.c-green {
+    color: green;
+}
